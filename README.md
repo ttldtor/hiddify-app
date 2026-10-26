@@ -22,6 +22,20 @@
 
 
 
+## Windows application routing in this fork
+
+This experimental fork of [Hiddify](https://github.com/hiddify/hiddify-app) adds
+Windows TUN application routing: exclude selected applications from the remote
+proxy, or use the proxy only for selected applications. Select an executable file
+or a running process to save its path; executable names are also supported.
+Local settings are retained across subscription updates. The matching core changes
+are pinned in the `hiddify-core` submodule.
+
+See [configuration, DNS behavior and limitations](docs/windows-app-routing.md).
+Shared Windows DNS and work delegated to other processes prevent a strict
+application-wide bypass guarantee. This is a development branch, not an official
+Hiddify release. The original [license and attribution](LICENSE.md) are retained.
+
 ## What is Hiddify app?
 
 <p dir="ltr" style="font-size: 16px">A multi-platform proxy client based on <a href="https://github.com/SagerNet/sing-box">Sing-box</a> universal proxy tool-chain. Hiddify offers a wide range of capabilities, like automatic node selection, TUN mode, remote profiles etc. Hiddify is ad-free and open-source. With support for a wide range of protocols, it provides a secure and private way for accessing free internet.</p>

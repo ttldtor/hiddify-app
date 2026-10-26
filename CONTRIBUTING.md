@@ -28,6 +28,9 @@ When contributing a complex change to the Hiddify repository, please discuss the
 
 ## Development
 
+See [Windows application routing](docs/windows-app-routing.md) for its architecture,
+safe focused tests and isolated-VM qualification plan.
+
 ### Adding Feature / Fix bug in Core:
 Please follow our [Go Core Development repository](https://github.com/hiddify/hiddify-next-core/main/CONTRIBUTING.m).
 

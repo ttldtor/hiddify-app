@@ -5,6 +5,7 @@ import 'package:hiddify/core/model/region.dart';
 import 'package:hiddify/core/utils/exception_handler.dart';
 import 'package:hiddify/core/utils/json_converters.dart';
 import 'package:hiddify/core/utils/preferences_utils.dart';
+import 'package:hiddify/features/app_based_routing/data/windows_app_routing_preferences.dart';
 import 'package:hiddify/features/log/model/log_level.dart';
 import 'package:hiddify/features/profile/data/profile_parser.dart';
 import 'package:hiddify/features/route_rules/notifier/rules_notifier.dart';
@@ -465,6 +466,7 @@ abstract class ConfigOptions {
     // };
 
     final mode = ref.watch(serviceMode);
+    final appRouting = PlatformUtils.isWindows ? ref.watch(windowsAppRoutingProvider) : null;
     // final reg = ref.watch(Preferences.region.notifier).raw();
     return SingboxConfigOption(
       region: ref.watch(region).name,
@@ -545,6 +547,7 @@ abstract class ConfigOptions {
         profile: SingboxUnblockerProfileOption(id: ref.watch(unblockerProfileId)),
       ),
       routeRule: RouteRule(rules: ref.watch(rulesNotifierProvider)).toProto3Json()! as Map<String, dynamic>,
+      windowsAppRouting: appRouting?.enabled == true ? appRouting!.toJson() : null,
     );
   });
 }
@@ -562,7 +565,16 @@ class ConfigOptionRepository with ExceptionHandler, InfraLogger {
   Either<ConfigOptionFailure, SingboxConfigOption> fullOptionsOverrided(String? profileOverride) =>
       Either.tryCatch(() => _getConfigOptions(), ConfigOptionFailure.unexpected).flatMap(
         (options) => Either.tryCatch(() {
-          final json = ProfileParser.applyProfileOverride(options.toJson(), profileOverride);
+          final base = options.toJson()..remove('windows-app-routing');
+          final json = ProfileParser.applyProfileOverride(base, profileOverride);
+          // Subscription overrides cannot introduce, replace, or disable local app rules.
+          // Restore the whole object: recursive merging would retain injected fields.
+          json.remove('windows-app-routing');
+          if (options.windowsAppRouting case final policy?) {
+            json['windows-app-routing'] = policy;
+            json['enable-tun'] = options.enableTun;
+            json['execute-config-as-is'] = false;
+          }
           return SingboxConfigOption.fromJson(json);
         }, ConfigOptionFailure.unexpected),
       );

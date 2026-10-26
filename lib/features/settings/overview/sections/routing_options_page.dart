@@ -15,6 +15,7 @@ import 'package:hiddify/features/app_based_routing/model/pkg_flag.dart';
 import 'package:hiddify/features/app_based_routing/overview/app_based_routing_notifier.dart';
 import 'package:hiddify/features/app_based_routing/overview/app_list_notifier.dart';
 import 'package:hiddify/features/app_based_routing/overview/auto_selection_notifier.dart';
+import 'package:hiddify/features/app_based_routing/overview/windows_app_routing_section.dart';
 import 'package:hiddify/features/route_rules/notifier/rules_notifier.dart';
 import 'package:hiddify/features/route_rules/widget/rule_tile.dart';
 import 'package:hiddify/features/settings/data/config_option_repository.dart';
@@ -73,6 +74,7 @@ class RoutingOptionsPage extends HookConsumerWidget {
           children: [
             // native, so it applies before every rule
             if (PlatformUtils.isAndroid) const _AppBasedRoutingSection(),
+            if (PlatformUtils.isWindows) const WindowsAppRoutingSection(),
             const _PinnedOptions(),
           ],
         ),

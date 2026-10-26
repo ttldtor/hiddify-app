@@ -54,6 +54,8 @@ class SingboxConfigOption with _$SingboxConfigOption {
     // required bool enableDnsRouting,
     required bool independentDnsCache,
     required Map<String, dynamic> routeRule,
+    /// Local Windows policy; omitted while disabled and on other platforms.
+    @JsonKey(includeIfNull: false) Map<String, dynamic>? windowsAppRouting,
     // required SingboxMuxOption mux,
     required SingboxTlsTricks tlsTricks,
     required ChainStatus chainStatus,
